@@ -11,7 +11,7 @@ if [ -z "$(ls -A "$DATA_DIR")" ]; then
     su - postgres -c "/usr/lib/postgresql/16/bin/initdb -D $DATA_DIR"
     
     echo "shared_preload_libraries = 'pg_stat_statements'" >> "$DATA_DIR/postgresql.conf"
-    echo "listen_addresses = '*'" >> "$DATA_DIR/postgresql.conf"
+    echo "listen_addresses = 'localhost'" >> "$DATA_DIR/postgresql.conf"
     
     # Start postgres temporarily
     su - postgres -c "/usr/lib/postgresql/16/bin/pg_ctl -D $DATA_DIR -l /tmp/pg.log start"

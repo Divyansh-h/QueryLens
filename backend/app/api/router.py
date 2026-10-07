@@ -92,6 +92,37 @@ def parse_plan_node(node: dict) -> PlanNode:
         children=children
     )
 
+async def _run_explain_in_transaction(conn: AsyncConnection, validated_query: str):
+    """Run EXPLAIN ANALYZE inside a transaction that is always rolled back.
+    
+    This ensures:
+    1. SET LOCAL works (requires a transaction block)
+    2. Any side effects from EXPLAIN ANALYZE on DML are reverted
+    """
+    result = None
+    try:
+        async with conn.transaction():
+            await conn.execute("SET LOCAL statement_timeout = '10s'")
+            
+            explain_sql = f"EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) {validated_query}"
+            
+            async with conn.cursor() as cur:
+                await cur.execute(explain_sql)
+                result = await cur.fetchone()
+            
+            # Force a rollback to revert any side effects
+            raise _Rollback()
+    except _Rollback:
+        pass  # expected — we intentionally rolled back
+    
+    return result
+
+
+class _Rollback(Exception):
+    """Sentinel exception to force transaction rollback after EXPLAIN ANALYZE."""
+    pass
+
+
 @api_router.post("/explain", response_model=ExplainResponse)
 @limiter.limit("20/minute")
 async def explain_query(request: Request, body: ExplainRequest, conn: AsyncConnection = Depends(get_db_connection)):
@@ -102,21 +133,9 @@ async def explain_query(request: Request, body: ExplainRequest, conn: AsyncConne
         raise HTTPException(status_code=400, detail=str(e))
 
     try:
-        # Enforce read-only transaction and strict timeout (10 seconds)
-        await conn.execute("SET TRANSACTION READ ONLY")
-        await conn.execute("SET LOCAL statement_timeout = 10000")
-        
-        explain_sql = f"EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) {validated_query}"
-        
-        async with conn.cursor() as cur:
-            await cur.execute(explain_sql)
-            result = await cur.fetchone()
+        result = await _run_explain_in_transaction(conn, validated_query)
     except Exception as e:
-        await conn.rollback()
         raise HTTPException(status_code=400, detail=f"Query execution failed: {str(e)}")
-    finally:
-        # ALWAYS rollback the transaction to prevent side effects of INSERT/UPDATE/DELETE during EXPLAIN ANALYZE
-        await conn.rollback()
         
     if not result or not result[0]:
         raise HTTPException(status_code=500, detail="Failed to get explain plan")
@@ -147,19 +166,9 @@ async def suggest_indexes_endpoint(request: ExplainRequest, conn: AsyncConnectio
         raise HTTPException(status_code=400, detail=str(e))
 
     try:
-        await conn.execute("SET TRANSACTION READ ONLY")
-        await conn.execute("SET LOCAL statement_timeout = 10000")
-        
-        explain_sql = f"EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) {validated_query}"
-        
-        async with conn.cursor() as cur:
-            await cur.execute(explain_sql)
-            result = await cur.fetchone()
+        result = await _run_explain_in_transaction(conn, validated_query)
     except Exception as e:
-        await conn.rollback()
         raise HTTPException(status_code=400, detail=f"Query execution failed: {str(e)}")
-    finally:
-        await conn.rollback()
         
     if not result or not result[0]:
         raise HTTPException(status_code=500, detail="Failed to get explain plan")
@@ -220,10 +229,8 @@ async def reset_stats(conn: AsyncConnection = Depends(get_admin_connection)):
     try:
         async with conn.cursor() as cur:
             await cur.execute("SELECT pg_stat_statements_reset()")
-        await conn.commit()
         return ResetStatsResponse(status="ok", message="Query statistics reset successfully")
     except Exception as e:
-        await conn.rollback()
         raise HTTPException(status_code=500, detail=f"Failed to reset statistics: {str(e)}")
 
 @api_router.post("/indexes/apply", response_model=ApplyIndexResponse)
@@ -240,14 +247,17 @@ async def apply_index(request: ApplyIndexRequest, conn: AsyncConnection = Depend
         raise HTTPException(status_code=400, detail=str(e))
     
     try:
+        # CREATE INDEX runs in autocommit mode (DDL), which is fine
         await conn.execute(request.statement)
-        await conn.commit()
         
-        await conn.execute("SET LOCAL statement_timeout = 10000")
+        # Use session-level SET for the timeout (autocommit, no transaction block)
+        await conn.execute("SET statement_timeout = '10s'")
         explain_sql = f"EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) {validated_query}"
         async with conn.cursor() as cur:
             await cur.execute(explain_sql)
             result = await cur.fetchone()
+        # Reset timeout
+        await conn.execute("SET statement_timeout = 0")
             
         raw_plan = result[0][0] if isinstance(result[0], list) else result[0]
         exec_time = raw_plan.get("Execution Time", 0.0)
@@ -260,7 +270,6 @@ async def apply_index(request: ApplyIndexRequest, conn: AsyncConnection = Depend
             raw_plan=raw_plan
         )
     except Exception as e:
-        await conn.rollback()
         raise HTTPException(status_code=400, detail=f"Failed to apply index: {str(e)}")
 
 @api_router.post("/indexes/drop")
@@ -268,10 +277,8 @@ async def drop_index(request: DropIndexRequest, conn: AsyncConnection = Depends(
     """Drops the specified index."""
     try:
         await conn.execute(f"DROP INDEX IF EXISTS {request.index_name}")
-        await conn.commit()
         return {"status": "ok"}
     except Exception as e:
-        await conn.rollback()
         raise HTTPException(status_code=400, detail=f"Failed to drop index: {str(e)}")
 
 @api_router.post("/run-workload")
@@ -295,14 +302,15 @@ async def run_workload(conn: AsyncConnection = Depends(get_admin_connection)):
         "SELECT * FROM customers WHERE email LIKE '%@example.com' AND first_name LIKE '%5%';"
     ]
     try:
-        await conn.execute("SET LOCAL statement_timeout = 60000")
+        # Use session-level SET (works in autocommit mode)
+        await conn.execute("SET statement_timeout = '60s'")
         for _ in range(5):
             for q in queries:
                 await conn.execute(q)
-        await conn.commit()
+        # Reset timeout
+        await conn.execute("SET statement_timeout = 0")
         return {"status": "ok"}
     except Exception as e:
-        await conn.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.post("/analyze-plan", response_model=ExplainResponse)
@@ -333,9 +341,12 @@ async def analyze_pasted_plan(request: AnalyzePlanRequest):
 @api_router.get("/dataset-status")
 async def dataset_status(conn: AsyncConnection = Depends(get_db_connection)):
     try:
-        await conn.execute("SET LOCAL statement_timeout = 2000")
+        # Use session-level SET (works in autocommit mode)
+        await conn.execute("SET statement_timeout = '2s'")
         res = await conn.execute("SELECT (SELECT count(*) FROM order_items) > 0 as ready")
         row = await res.fetchone()
+        # Reset timeout
+        await conn.execute("SET statement_timeout = 0")
         return {"ready": row[0] if row else False}
     except Exception:
         return {"ready": False}
