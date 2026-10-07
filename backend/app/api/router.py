@@ -1,8 +1,9 @@
 import re
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from psycopg import AsyncConnection
-from app.db import get_db_connection
+from app.db import get_db_connection, get_admin_connection
 from fastapi import Query
+from app.limiter import limiter
 from app.schemas import (
     ExplainRequest, ExplainResponse, PlanNode, SuggestIndexesResponse,
     SlowQueriesResponse, SlowQueryItem, ResetStatsResponse,
@@ -87,10 +88,11 @@ def parse_plan_node(node: dict) -> PlanNode:
     )
 
 @api_router.post("/explain", response_model=ExplainResponse)
-async def explain_query(request: ExplainRequest, conn: AsyncConnection = Depends(get_db_connection)):
+@limiter.limit("20/minute")
+async def explain_query(request: Request, body: ExplainRequest, conn: AsyncConnection = Depends(get_db_connection)):
     """Runs EXPLAIN ANALYZE on a query and parses the result into a normalized tree."""
     try:
-        validated_query = validate_query(request.query)
+        validated_query = validate_query(body.query)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -208,7 +210,7 @@ async def get_slow_queries(
         raise HTTPException(status_code=500, detail=f"Failed to fetch slow queries: {str(e)}")
 
 @api_router.post("/reset-stats", response_model=ResetStatsResponse)
-async def reset_stats(conn: AsyncConnection = Depends(get_db_connection)):
+async def reset_stats(conn: AsyncConnection = Depends(get_admin_connection)):
     """Resets the pg_stat_statements statistics back to zero."""
     try:
         async with conn.cursor() as cur:
@@ -220,7 +222,7 @@ async def reset_stats(conn: AsyncConnection = Depends(get_db_connection)):
         raise HTTPException(status_code=500, detail=f"Failed to reset statistics: {str(e)}")
 
 @api_router.post("/indexes/apply", response_model=ApplyIndexResponse)
-async def apply_index(request: ApplyIndexRequest, conn: AsyncConnection = Depends(get_db_connection)):
+async def apply_index(request: ApplyIndexRequest, conn: AsyncConnection = Depends(get_admin_connection)):
     """Creates a real index and returns the new EXPLAIN ANALYZE performance."""
     if not request.statement.strip().lower().startswith("create index"):
         raise HTTPException(status_code=400, detail="Only CREATE INDEX is allowed.")
@@ -257,7 +259,7 @@ async def apply_index(request: ApplyIndexRequest, conn: AsyncConnection = Depend
         raise HTTPException(status_code=400, detail=f"Failed to apply index: {str(e)}")
 
 @api_router.post("/indexes/drop")
-async def drop_index(request: DropIndexRequest, conn: AsyncConnection = Depends(get_db_connection)):
+async def drop_index(request: DropIndexRequest, conn: AsyncConnection = Depends(get_admin_connection)):
     """Drops the specified index."""
     try:
         await conn.execute(f"DROP INDEX IF EXISTS {request.index_name}")
@@ -268,7 +270,7 @@ async def drop_index(request: DropIndexRequest, conn: AsyncConnection = Depends(
         raise HTTPException(status_code=400, detail=f"Failed to drop index: {str(e)}")
 
 @api_router.post("/run-workload")
-async def run_workload(conn: AsyncConnection = Depends(get_db_connection)):
+async def run_workload(conn: AsyncConnection = Depends(get_admin_connection)):
     """Runs a few slow queries to populate pg_stat_statements."""
     queries = [
         "SELECT COUNT(*) FROM orders WHERE status = 'PENDING';",

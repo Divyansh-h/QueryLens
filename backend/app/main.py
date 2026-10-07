@@ -8,25 +8,26 @@ import logging
 
 from app.config import settings
 import app.db as db
-from psycopg_pool import AsyncConnectionPool
 from app.api.router import api_router
+from app.limiter import limiter
+
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: Initialize the DB connection pool
-    logger.info("Initializing database pool...")
-    db.pool = AsyncConnectionPool(conninfo=settings.database_url, open=False)
-    await db.pool.open()
+    # Startup: Initialize the DB connection pools
+    logger.info("Initializing database pools...")
+    await db.init_pools()
     
     yield
     
-    # Shutdown: Close the DB connection pool
-    logger.info("Closing database pool...")
-    if db.pool:
-        await db.pool.close()
+    # Shutdown: Close the DB connection pools
+    logger.info("Closing database pools...")
+    await db.close_pools()
 
 def create_app() -> FastAPI:
     app = FastAPI(
@@ -36,14 +37,15 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
+    # Set up Rate Limiter
+    app.state.limiter = limiter
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
     # Configure CORS
+    origins = [o.strip() for o in settings.allowed_origins.split(",") if o.strip()]
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[
-            settings.vite_api_base_url, 
-            "http://localhost:5173", 
-            "http://localhost:3000"
-        ],
+        allow_origins=origins,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],

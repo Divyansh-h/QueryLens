@@ -21,13 +21,22 @@ if [ -z "$(ls -A "$DATA_DIR")" ]; then
       sleep 1
     done
     
-    echo "Creating database and user..."
+    echo "Creating database and users..."
     su - postgres -c "psql -c \"CREATE DATABASE querylens;\""
-    su - postgres -c "psql -c \"ALTER USER postgres WITH PASSWORD 'postgres';\""
+    su - postgres -c "psql -c \"CREATE USER querylens_admin WITH PASSWORD 'admin_pass';\""
+    su - postgres -c "psql -c \"ALTER USER querylens_admin SUPERUSER;\""
+    su - postgres -c "psql -c \"CREATE USER querylens_ro WITH PASSWORD 'ro_pass';\""
+    su - postgres -c "psql -c \"ALTER DATABASE querylens OWNER TO querylens_admin;\""
     
     echo "Running init.sql and schema.sql..."
-    su - postgres -c "psql -d querylens -f /opt/querylens/scripts/init.sql"
-    su - postgres -c "psql -d querylens -f /opt/querylens/scripts/schema.sql"
+    su - postgres -c "psql -U querylens_admin -d querylens -f /opt/querylens/scripts/init.sql"
+    su - postgres -c "psql -U querylens_admin -d querylens -f /opt/querylens/scripts/schema.sql"
+    
+    echo "Setting up read-only permissions..."
+    su - postgres -c "psql -d querylens -c \"GRANT CONNECT ON DATABASE querylens TO querylens_ro;\""
+    su - postgres -c "psql -d querylens -c \"GRANT USAGE ON SCHEMA public TO querylens_ro;\""
+    su - postgres -c "psql -d querylens -c \"GRANT SELECT ON ALL TABLES IN SCHEMA public TO querylens_ro;\""
+    su - postgres -c "psql -d querylens -c \"ALTER DEFAULT PRIVILEGES FOR USER querylens_admin IN SCHEMA public GRANT SELECT ON TABLES TO querylens_ro;\""
     
     # Stop temporary postgres
     su - postgres -c "/usr/lib/postgresql/16/bin/pg_ctl -D $DATA_DIR stop"
@@ -55,7 +64,7 @@ if [ -f /tmp/needs_seed ]; then
         if [ "$ORDER_ITEMS" -eq 0 ]; then ORDER_ITEMS=1; fi
 
         echo "Seeding data with scale=$SCALE (customers=$CUSTOMERS, products=$PRODUCTS, order_items=$ORDER_ITEMS)..."
-        su - postgres -c "psql -d querylens -v customers_count=$CUSTOMERS -v products_count=$PRODUCTS -v orders_count=$SCALE -v order_items_count=$ORDER_ITEMS -f /opt/querylens/scripts/seed.sql"
+        su - postgres -c "psql -U querylens_admin -d querylens -v customers_count=$CUSTOMERS -v products_count=$PRODUCTS -v orders_count=$SCALE -v order_items_count=$ORDER_ITEMS -f /opt/querylens/scripts/seed.sql"
         echo "Seeding complete!"
         rm -f /tmp/needs_seed
     ) &
