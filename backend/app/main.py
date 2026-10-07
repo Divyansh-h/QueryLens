@@ -66,18 +66,17 @@ def create_app() -> FastAPI:
     # Include routers
     app.include_router(api_router, prefix="/api")
 
-# Serve frontend static files in production
-STATIC_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
-if os.path.exists(STATIC_DIR):
-    app.mount("/assets", StaticFiles(directory=os.path.join(STATIC_DIR, "assets")), name="assets")
-    
-    @app.get("/{full_path:path}")
-    async def catch_all(full_path: str):
-        target_path = os.path.join(STATIC_DIR, full_path)
-        if os.path.isfile(target_path):
-            return FileResponse(target_path)
-        return FileResponse(os.path.join(STATIC_DIR, "index.html"))
-
+    # Serve frontend static files in production
+    STATIC_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
+    if os.path.exists(STATIC_DIR):
+        app.mount("/assets", StaticFiles(directory=os.path.join(STATIC_DIR, "assets")), name="assets")
+        
+        @app.get("/{full_path:path}")
+        async def catch_all(full_path: str):
+            target_path = os.path.join(STATIC_DIR, full_path)
+            if os.path.isfile(target_path):
+                return FileResponse(target_path)
+            return FileResponse(os.path.join(STATIC_DIR, "index.html"))
 
     return app
 
