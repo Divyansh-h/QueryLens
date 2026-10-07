@@ -1,0 +1,142 @@
+{
+  "postgres explain visualizer": [
+    {
+      "url": "https://pgexplain.dev/",
+      "word_count": 81,
+      "headings": 1,
+      "code_blocks": 3,
+      "images": 0,
+      "has_schema": false,
+      "has_interactive_tool": true
+    },
+    {
+      "url": "https://explain.dalibo.com/",
+      "word_count": 179,
+      "headings": 2,
+      "code_blocks": 3,
+      "images": 2,
+      "has_schema": false,
+      "has_interactive_tool": true
+    },
+    {
+      "url": "https://github.com/dalibo/pev2",
+      "word_count": 956,
+      "headings": 34,
+      "code_blocks": 11,
+      "images": 2,
+      "has_schema": false,
+      "has_interactive_tool": true
+    }
+  ],
+  "how to read postgres explain": [
+    {
+      "url": "https://www.postgresql.org/docs/current/using-explain.html",
+      "word_count": 7445,
+      "headings": 5,
+      "code_blocks": 175,
+      "images": 1,
+      "has_schema": false,
+      "has_interactive_tool": true
+    },
+    {
+      "url": "https://thoughtbot.com/blog/reading-an-explain-analyze-query-plan",
+      "word_count": 1730,
+      "headings": 7,
+      "code_blocks": 46,
+      "images": 0,
+      "has_schema": true,
+      "has_interactive_tool": true
+    },
+    {
+      "url": "https://medium.easyread.co/today-i-learned-understanding-postgres-explain-query-5670dd042c99",
+      "error": "Status 403"
+    }
+  ],
+  "fix slow query postgres": [
+    {
+      "url": "https://www.reddit.com/r/dataengineering/comments/15jlrkd/fixing_slow_queries_in_postgresql/",
+      "word_count": 1,
+      "headings": 0,
+      "code_blocks": 0,
+      "images": 0,
+      "has_schema": false,
+      "has_interactive_tool": true
+    },
+    {
+      "url": "https://render.com/blog/postgresql-top-cause-slow-queries",
+      "word_count": 2348,
+      "headings": 10,
+      "code_blocks": 47,
+      "images": 0,
+      "has_schema": true,
+      "has_interactive_tool": false
+    },
+    {
+      "url": "https://dev.to/piteradyson/postgresql-slow-queries-7-ways-to-find-and-fix-performance-bottlenecks-2app",
+      "word_count": 2910,
+      "headings": 13,
+      "code_blocks": 93,
+      "images": 23,
+      "has_schema": true,
+      "has_interactive_tool": true
+    }
+  ],
+  "tools to find slow queries postgres": [
+    {
+      "url": "https://www.reddit.com/r/PostgreSQL/comments/1wnr08i/any_good_tools_for_identifying_slow_or/",
+      "word_count": 1,
+      "headings": 0,
+      "code_blocks": 0,
+      "images": 0,
+      "has_schema": false,
+      "has_interactive_tool": true
+    },
+    {
+      "url": "https://www.linkedin.com/pulse/how-capture-slow-query-postgres-database-prateek-jain-plirc",
+      "word_count": 1399,
+      "headings": 29,
+      "code_blocks": 136,
+      "images": 60,
+      "has_schema": true,
+      "has_interactive_tool": true
+    },
+    {
+      "url": "https://aiven.io/docs/products/postgresql/howto/identify-pg-slow-queries",
+      "word_count": 1074,
+      "headings": 10,
+      "code_blocks": 53,
+      "images": 2,
+      "has_schema": true,
+      "has_interactive_tool": false
+    }
+  ],
+  "hypopg tutorial": [
+    {
+      "url": "https://www.cybrosys.com/research-and-development/postgres/how-to-use-postgresql-hypopg-extension-to-test-indexes-without-creating-them",
+      "word_count": 1635,
+      "headings": 9,
+      "code_blocks": 20,
+      "images": 16,
+      "has_schema": false,
+      "has_interactive_tool": true
+    },
+    {
+      "url": "https://valerieparhamthompson.com/posts/query-optimization-with-hypopg/",
+      "word_count": 807,
+      "headings": 6,
+      "code_blocks": 21,
+      "images": 1,
+      "has_schema": false,
+      "has_interactive_tool": false
+    },
+    {
+      "url": "https://hypopg.readthedocs.io/en/rel1_stable/usage.html",
+      "word_count": 1581,
+      "headings": 8,
+      "code_blocks": 24,
+      "images": 0,
+      "has_schema": false,
+      "has_interactive_tool": true
+    }
+  ]
+}
