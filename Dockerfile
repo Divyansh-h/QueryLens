@@ -31,6 +31,7 @@ COPY --from=frontend-builder /app/dist ./static
 
 # Setup scripts
 COPY docker/init.sql ./scripts/init.sql
+COPY scripts/schema.sql ./scripts/schema.sql
 COPY scripts/seed.sql ./scripts/seed.sql
 COPY start.sh ./start.sh
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
