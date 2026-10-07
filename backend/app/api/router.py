@@ -322,3 +322,13 @@ async def analyze_pasted_plan(request: AnalyzePlanRequest):
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@api_router.get("/dataset-status")
+async def dataset_status(conn: AsyncConnection = Depends(get_db_connection)):
+    try:
+        await conn.execute("SET LOCAL statement_timeout = 2000")
+        res = await conn.execute("SELECT (SELECT count(*) FROM order_items) > 0 as ready")
+        row = await res.fetchone()
+        return {"ready": row[0] if row else False}
+    except Exception:
+        return {"ready": False}

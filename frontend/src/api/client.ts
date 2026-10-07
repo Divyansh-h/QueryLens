@@ -31,4 +31,11 @@ export const apiClient = {
             body: JSON.stringify(body),
         });
     }
+  async getDatasetStatus(): Promise<{ ready: boolean }> {
+    const res = await fetch(`${API_BASE_URL}/dataset-status`);
+    if (!res.ok) {
+      throw new Error(`API error: ${res.statusText}`);
+    }
+    return res.json();
+  }
 };

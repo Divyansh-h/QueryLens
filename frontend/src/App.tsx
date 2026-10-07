@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Database, Search, ListFilter, Activity, GraduationCap, Sun, Moon, Server } from 'lucide-react';
+import { Database, Search, ListFilter, Activity, GraduationCap, Sun, Moon, Server, Loader2 } from 'lucide-react';
 import { apiClient } from './api/client';
 import Analyzer from './components/Analyzer';
 import IndexLab from './components/IndexLab';
@@ -15,6 +15,25 @@ export default function App() {
   
   const [activeTab, setActiveTab] = useState('analyzer');
   const [targetQuery, setTargetQuery] = useState("");
+  const [datasetReady, setDatasetReady] = useState(false);
+
+  useEffect(() => {
+    let timeoutId: number;
+    const checkStatus = async () => {
+      try {
+        const { ready } = await apiClient.getDatasetStatus();
+        if (ready) {
+          setDatasetReady(true);
+        } else {
+          timeoutId = window.setTimeout(checkStatus, 2000);
+        }
+      } catch (err) {
+        timeoutId = window.setTimeout(checkStatus, 5000);
+      }
+    };
+    checkStatus();
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   const handleAnalyzeQuery = (query: string) => {
     setTargetQuery(query);
@@ -40,6 +59,18 @@ export default function App() {
     { id: 'datasets', name: 'Datasets', icon: Database },
     { id: 'learn', name: 'Learn', icon: GraduationCap },
   ];
+
+  if (!datasetReady) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-200">
+        <Loader2 className="w-12 h-12 text-blue-500 animate-spin mb-4" />
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Initializing Sandbox</h2>
+        <p className="text-gray-500 dark:text-gray-400 max-w-md text-center">
+          Loading sample dataset and configuring PostgreSQL... This will only take a moment on the first run.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen overflow-hidden font-sans">
