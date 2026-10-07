@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  db:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile.postgres
+    container_name: querylens_db
+    ports:
+      - "5432:5432"
+    environment:
+      # These will fallback to the default values if not defined in a .env file
+      POSTGRES_USER: ${POSTGRES_USER:-querylens_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-querylens_password}
+      POSTGRES_DB: ${POSTGRES_DB:-querylens}
+    # It's best practice to also set shared_preload_libraries directly in the startup command 
+    # so it takes effect instantly without needing a container restart after init.sql runs.
+    command: ["postgres", "-c", "shared_preload_libraries=pg_stat_statements"]
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pydantic-settings
+psycopg[pool]
+pytest
+pytest-asyncio
+httpx
+python-dotenv

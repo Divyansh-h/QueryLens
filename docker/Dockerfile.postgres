@@ -1,0 +1,11 @@
+FROM postgres:16
+
+# Install hypopg and postgresql-contrib (which contains pg_stat_statements)
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        postgresql-16-hypopg \
+        postgresql-contrib \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy the initialization script to be executed on first startup
+COPY init.sql /docker-entrypoint-initdb.d/
