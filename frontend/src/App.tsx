@@ -64,9 +64,9 @@ export default function App() {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-200">
         <Loader2 className="w-12 h-12 text-blue-500 animate-spin mb-4" />
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Initializing Sandbox</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Waking up from Cold Start</h2>
         <p className="text-gray-500 dark:text-gray-400 max-w-md text-center">
-          Loading sample dataset and configuring PostgreSQL... This will only take a moment on the first run.
+          Render spun down this free-tier instance due to inactivity. We are currently re-initializing PostgreSQL and seeding the sample dataset. This usually takes 10-15 seconds!
         </p>
       </div>
     );

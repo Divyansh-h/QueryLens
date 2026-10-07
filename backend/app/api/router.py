@@ -16,7 +16,7 @@ from app.suggester import suggest_indexes
 api_router = APIRouter()
 
 @api_router.get("/health")
-async def health_check(conn: AsyncConnection = Depends(get_db_connection)):
+async def health_check(conn: AsyncConnection = Depends(get_admin_connection)):
     """Health check endpoint that verifies DB connectivity."""
     try:
         async with conn.cursor() as cur:
@@ -33,6 +33,11 @@ async def health_check(conn: AsyncConnection = Depends(get_db_connection)):
             "database": "disconnected",
             "details": str(e)
         }
+
+@api_router.get("/ping")
+async def ping():
+    """Lightweight endpoint for uptime monitors to prevent cold starts."""
+    return {"status": "ok", "message": "pong"}
 
 def validate_query(query: str) -> str:
     if len(query) > 10000:
