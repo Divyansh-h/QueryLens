@@ -165,7 +165,7 @@ export default function IndexLab({ darkMode }: { darkMode: boolean }) {
               <span className="text-xl font-mono text-indigo-600 dark:text-indigo-400 mb-3">{appliedIndex.newTime.toFixed(2)}ms</span>
               <div 
                 className="w-24 bg-indigo-500 dark:bg-indigo-600 rounded-t-md transition-all duration-1000 ease-out shadow-lg" 
-                style={{ height: \`\${Math.max((appliedIndex.newTime / baselineTime) * 100, 5)}%\` }}
+                style={{ height: `${Math.max((appliedIndex.newTime / baselineTime) * 100, 5)}%` }}
               ></div>
               <span className="mt-4 text-sm font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wide">With Index</span>
             </div>

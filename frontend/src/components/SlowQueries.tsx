@@ -29,7 +29,7 @@ export default function SlowQueries({ darkMode, onAnalyzeQuery }: { darkMode: bo
   const handleRunWorkload = async () => {
     setWorkloading(true);
     try {
-      await apiClient.post('/run-workload');
+      await apiClient.post('/run-workload', {});
       await fetchData();
     } catch (e) {
       console.error(e);
@@ -40,7 +40,7 @@ export default function SlowQueries({ darkMode, onAnalyzeQuery }: { darkMode: bo
 
   const handleReset = async () => {
     try {
-      await apiClient.post('/reset-stats');
+      await apiClient.post('/reset-stats', {});
       await fetchData();
     } catch (e) {
       console.error(e);
@@ -130,7 +130,7 @@ export default function SlowQueries({ darkMode, onAnalyzeQuery }: { darkMode: bo
                 <div className="flex-1 bg-gray-100 dark:bg-gray-700 rounded-full h-5 overflow-hidden flex items-center group relative shadow-inner">
                   <div 
                     className="h-full bg-blue-500 dark:bg-blue-600 rounded-full transition-all duration-1000 ease-out"
-                    style={{ width: \`\${Math.max((q.total_time / maxTotalTime) * 100, 1)}%\` }}
+                    style={{ width: `${Math.max((q.total_time / maxTotalTime) * 100, 1)}%` }}
                   />
                   <div className="absolute opacity-0 group-hover:opacity-100 pl-3 text-xs font-bold text-gray-800 dark:text-gray-200">
                     {q.total_time.toFixed(1)}ms

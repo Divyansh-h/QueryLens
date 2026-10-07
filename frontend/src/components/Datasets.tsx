@@ -192,11 +192,11 @@ export default function Datasets({ onAnalyzeQuery }: { onAnalyzeQuery: (query: s
                 <div>
                   <div className="flex items-center space-x-2 mb-2">
                     <span className="text-xs font-bold text-gray-500 uppercase">#{challenge.id}</span>
-                    <span className={\`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase \${
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
                       challenge.difficulty === 'Easy' ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400' :
                       challenge.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400' :
                       'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400'
-                    }\`}>
+                    }`}>
                       {challenge.difficulty}
                     </span>
                   </div>

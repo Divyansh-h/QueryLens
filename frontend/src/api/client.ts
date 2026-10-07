@@ -30,7 +30,7 @@ export const apiClient = {
             method: 'POST',
             body: JSON.stringify(body),
         });
-    }
+    },
   async getDatasetStatus(): Promise<{ ready: boolean }> {
     const res = await fetch(`${API_BASE_URL}/dataset-status`);
     if (!res.ok) {
