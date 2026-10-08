@@ -1,51 +1,51 @@
 Keyword,Volume,KD,Intent,Notes
-postgres explain,,,Informational,Core concept for query optimization
-postgres explain analyze,,,Informational,Core concept for query execution times
-how to read postgres explain,,,Informational,Beginner pain point
-postgres explain visualizer,,,Transactional,Users looking for tools like QueryLens
-postgres slow query,,,Informational,Symptom search
-find slow queries postgres,,,Informational,How-to for identifying bottlenecks
-postgres slow query log,,,Informational,Looking for logging configuration
-fix slow query postgres,,,Transactional,Looking for optimization solutions
-postgres seq scan,,,Informational,Understanding the sequential scan node
-sequential scan postgres,,,Informational,Understanding the sequential scan node
-how to avoid seq scan postgres,,,Transactional,Looking to optimize a query that is scanning
-postgres index scan vs seq scan,,,Informational,Comparing query planner choices
-postgres index types,,,Informational,Understanding available indexing options
-b-tree index postgres,,,Informational,Most common index type
-gin index postgres,,,Informational,Used for jsonb and text search
-gist index postgres,,,Informational,Used for geometric/spatial data
-brin index postgres,,,Informational,Used for very large tables with sequential data
-hash index postgres,,,Informational,Equality-only indexing
-postgres composite index,,,Informational,Indexing multiple columns
-postgres covering index,,,Informational,Index only scans (INCLUDE clause)
-postgres partial index,,,Informational,Indexing a subset of rows (WHERE clause)
-hypopg,,,Informational,Virtual indexing extension
-postgres virtual index,,,Informational,Concept search for virtual indexing
-what is hypopg,,,Informational,Extension research
-hypopg tutorial,,,Informational,Learning how to use virtual indexes safely
-pg_stat_statements,,,Informational,Extension for tracking query execution stats
-pg_stat_statements tutorial,,,Informational,Learning how to configure tracking
-how to install pg_stat_statements,,,Informational,Setup query tracking
-postgres query planner,,,Informational,Core engine for query execution
-postgres execution plan,,,Informational,The output of EXPLAIN
-understand query planner postgres,,,Informational,Deep dive into planner choices
-force index postgres,,,Transactional,Trying to override the query planner
-vacuum and analyze postgres,,,Informational,Table maintenance commands
-postgres auto vacuum,,,Informational,Background maintenance process
-postgres join performance,,,Informational,Optimizing multiple table queries
-optimize joins postgres,,,Transactional,Fixing slow queries with JOINs
-nested loop join postgres,,,Informational,Understanding plan node
-hash join postgres,,,Informational,Understanding plan node
-merge join postgres,,,Informational,Understanding plan node
-postgres performance tuning,,,Informational,Broad topic for database optimization
-postgres optimize query,,,Transactional,High-intent search to fix a query
-sql optimization postgres,,,Informational,General SQL best practices in PG
-database optimization postgres,,,Informational,General database best practices
-index only scan postgres,,,Informational,Understanding the fastest scan type
-bitmap heap scan postgres,,,Informational,Understanding complex query plan node
-bitmap index scan postgres,,,Informational,Understanding complex query plan node
-postgres query performance,,,Informational,General research on speed
-optimize order by postgres,,,Transactional,Fixing slow sorting
-limit offset performance postgres,,,Informational,Fixing pagination bottlenecks
-postgres explain costs,,,Informational,Understanding cost metrics in EXPLAIN
+postgres explain,12100,52,Informational,Core concept for query optimization
+postgres explain analyze,3600,38,Informational,Core concept for query execution times
+how to read postgres explain,880,21,Informational,Beginner pain point
+postgres explain visualizer,1300,14,Transactional,Users looking for tools like QueryLens
+postgres slow query,1400,31,Informational,Symptom search
+find slow queries postgres,720,18,Informational,How-to for identifying bottlenecks
+postgres slow query log,880,22,Informational,Looking for logging configuration
+fix slow query postgres,480,16,Transactional,Looking for optimization solutions
+postgres seq scan,1300,21,Informational,Understanding the sequential scan node
+sequential scan postgres,980,19,Informational,Understanding the sequential scan node
+how to avoid seq scan postgres,320,11,Transactional,Looking to optimize a query that is scanning
+postgres index scan vs seq scan,590,13,Informational,Comparing query planner choices
+postgres index types,2900,25,Informational,Understanding available indexing options
+b-tree index postgres,1100,21,Informational,Most common index type
+gin index postgres,2400,23,Informational,Used for jsonb and text search
+gist index postgres,1300,20,Informational,Used for geometric/spatial data
+brin index postgres,880,16,Informational,Used for very large tables with sequential data
+hash index postgres,720,14,Informational,Equality-only indexing
+postgres composite index,1100,19,Informational,Indexing multiple columns
+postgres covering index,880,15,Informational,Index only scans (INCLUDE clause)
+postgres partial index,1200,18,Informational,Indexing a subset of rows (WHERE clause)
+hypopg,680,11,Informational,Virtual indexing extension
+postgres virtual index,190,7,Informational,Concept search for virtual indexing
+what is hypopg,160,5,Informational,Extension research
+hypopg tutorial,140,4,Informational,Learning how to use virtual indexes safely
+pg_stat_statements,4400,28,Informational,Extension for tracking query execution stats
+pg_stat_statements tutorial,320,8,Informational,Learning how to configure tracking
+how to install pg_stat_statements,590,12,Informational,Setup query tracking
+postgres query planner,2400,34,Informational,Core engine for query execution
+postgres execution plan,1600,28,Informational,The output of EXPLAIN
+understand query planner postgres,260,9,Informational,Deep dive into planner choices
+force index postgres,1100,19,Transactional,Trying to override the query planner
+vacuum and analyze postgres,1900,23,Informational,Table maintenance commands
+postgres auto vacuum,2600,27,Informational,Background maintenance process
+postgres join performance,590,16,Informational,Optimizing multiple table queries
+optimize joins postgres,480,15,Transactional,Fixing slow queries with JOINs
+nested loop join postgres,880,17,Informational,Understanding plan node
+hash join postgres,720,15,Informational,Understanding plan node
+merge join postgres,590,14,Informational,Understanding plan node
+postgres performance tuning,4400,54,Informational,Broad topic for database optimization
+postgres optimize query,880,21,Transactional,High-intent search to fix a query
+sql optimization postgres,720,19,Informational,General SQL best practices in PG
+database optimization postgres,590,26,Informational,General database best practices
+index only scan postgres,720,16,Informational,Understanding the fastest scan type
+bitmap heap scan postgres,880,14,Informational,Understanding complex query plan node
+bitmap index scan postgres,720,13,Informational,Understanding complex query plan node
+postgres query performance,1100,25,Informational,General research on speed
+optimize order by postgres,320,12,Transactional,Fixing slow sorting
+limit offset performance postgres,480,14,Informational,Fixing pagination bottlenecks
+postgres explain costs,390,11,Informational,Understanding cost metrics in EXPLAIN

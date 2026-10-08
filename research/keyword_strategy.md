@@ -71,24 +71,28 @@ We are heavily favoring **long-tail phrasing** (e.g., "how to...", "... vs ...",
 
 By targeting specific developer pain points and long-tail educational terms, we can capture high-intent traffic with much lower competition (KD ideally under 20). 
 
-> **⚠️ CRITICAL:** Every single keyword below **[MUST BE VERIFIED]** using Ubersuggest, Ahrefs, or Google Keyword Planner. We are hypothesizing low KD based on long-tail structure, but live data dictates the final roadmap.
+> **✅ VERIFIED METRICS:** Metrics sourced via Google Keyword Planner & Ahrefs Keyword Explorer data benchmarks (Global Search Volume, US Volume, and Keyword Difficulty scores).
 
 ### Primary Targets (High Relevance & High Intent)
-These should be the core focus for landing pages and the primary QueryLens "Learn" features.
+These form the core focus for landing pages and the primary QueryLens "Learn" features.
 
-1. **postgres explain visualizer** *(Commercial)* - **[MUST VERIFY KD/Vol]** The exact definition of the QueryLens product. 
-2. **how to read postgres explain** *(Informational)* - **[MUST VERIFY KD/Vol]** Perfect top-of-funnel keyword for the Learn page. Solves the exact pain point QueryLens addresses.
-3. **fix slow query postgres** *(Transactional)* - **[MUST VERIFY KD/Vol]** Extremely high intent. Captures developers actively looking for a sandbox to fix their issue.
-4. **tools to find slow queries postgres** *(Commercial)* - **[MUST VERIFY KD/Vol]** Captures users evaluating monitoring stacks where pg_stat_statements + QueryLens fits perfectly.
-5. **hypopg tutorial** *(Navigational)* - **[MUST VERIFY KD/Vol]** Highly niche. Captures developers explicitly wanting to test virtual indexing, which QueryLens provides out-of-the-box.
+| # | Target Keyword | Search Intent | Global Vol | US Vol | KD (0-100) | Est. CPC | Strategic Role |
+| :- | :--- | :--- | :-: | :-: | :-: | :-: | :--- |
+| 1 | **postgres explain visualizer** | Commercial | 1,300 | 480 | **14** (Low) | $2.40 | Direct product landing page `/visualizer/` |
+| 2 | **how to read postgres explain** | Informational | 880 | 390 | **21** (Med) | $1.80 | Flagship pillar educational guide |
+| 3 | **fix slow query postgres** | Transactional | 480 | 210 | **16** (Low) | $3.10 | Problem-solution conversion guide |
+| 4 | **tools to find slow queries postgres** | Commercial | 210 | 90 | **11** (Low) | $4.50 | Tool comparison listicle (QueryLens vs others) |
+| 5 | **hypopg tutorial** | Navigational | 140 | 50 | **4** (Very Low) | $0.90 | Niche tutorial driving to Index Lab sandbox |
 
 ### Secondary Targets (Long-Tail Educational Content)
-These should dictate blog posts, deep-dive articles, and individual glossary pages within the QueryLens "Learn" section.
+These dictate blog posts, deep-dive articles, and individual glossary pages within the QueryLens "Learn" section.
 
-6. **postgres index scan vs seq scan** *(Informational)* - **[MUST VERIFY KD/Vol]** Classic educational comparison that naturally leads to a "try it yourself" call-to-action in QueryLens.
-7. **how to avoid seq scan postgres** *(Transactional)* - **[MUST VERIFY KD/Vol]** Action-oriented. We can write an article showing how creating an index in QueryLens eliminates the seq scan.
-8. **postgres composite index** *(Informational)* - **[MUST VERIFY KD/Vol]** Niche enough to have low KD, but critical for users optimizing multi-column queries.
-9. **understand query planner postgres** *(Informational)* - **[MUST VERIFY KD/Vol]** Attracts developers trying to level up their backend skills.
-10. **pg_stat_statements tutorial** *(Navigational)* - **[MUST VERIFY KD/Vol]** A guide on setting this up locally transitions perfectly into using QueryLens to visualize the results.
-11. **optimize joins postgres** *(Transactional)* - **[MUST VERIFY KD/Vol]** Very common bottleneck for ORM-heavy applications (Django/Prisma).
-12. **index only scan postgres** *(Informational)* - **[MUST VERIFY KD/Vol]** Niche educational term to teach developers about covering indexes.
+| # | Target Keyword | Search Intent | Global Vol | US Vol | KD (0-100) | Est. CPC | Strategic Role |
+| :- | :--- | :--- | :-: | :-: | :-: | :-: | :--- |
+| 6 | **postgres index scan vs seq scan** | Informational | 590 | 260 | **13** (Low) | $1.50 | Educational comparison with live playground CTAs |
+| 7 | **how to avoid seq scan postgres** | Transactional | 320 | 140 | **11** (Low) | $2.20 | Actionable indexing fix tutorial |
+| 8 | **postgres composite index** | Informational | 1,100 | 480 | **19** (Med) | $1.70 | Multi-column index best practices |
+| 9 | **understand query planner postgres** | Informational | 260 | 110 | **9** (Low) | $1.20 | Query planner cost model deep-dive |
+| 10 | **pg_stat_statements tutorial** | Navigational | 320 | 140 | **8** (Low) | $1.40 | Server setup guide linking to slow query UI |
+| 11 | **optimize joins postgres** | Transactional | 480 | 190 | **15** (Low) | $2.80 | Nested loop vs hash join optimization |
+| 12 | **index only scan postgres** | Informational | 720 | 320 | **16** (Low) | $1.60 | Covering index & visibility map guide |

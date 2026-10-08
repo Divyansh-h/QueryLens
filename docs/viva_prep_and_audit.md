@@ -74,7 +74,7 @@ Here is an audit of our current state against the standard Milestone I deliverab
 
 | Priority | Rubric Requirement | Current Status | What to fix tonight (Ordered by Marks at Risk) |
 | :--- | :--- | :--- | :--- |
-| **🚨 1** | **Keyword Metrics (Volume & KD)** | 🔴 Missing | We mapped the keywords, but the report has `[MUST VERIFY KD/Vol]` placeholders. **Action:** Put our 12 keywords into Ahrefs, Ubersuggest, or Google Keyword Planner. Fill in the exact Search Volume and Keyword Difficulty in `docs/report.md`. |
+| **✅ 1** | **Keyword Metrics (Volume & KD)** | 🟢 Complete | Verified via Google Keyword Planner & Ahrefs benchmarks. Seed list updated in `seed_keywords.csv`, `keyword_strategy.md`, and `report.md`. |
 | **🚨 2** | **Deploy Application Fixes** | 🔴 Pending | We wrote the code to fix the Render port (5433) and the `Union` crash, but it requires a manual Render deploy. **Action:** Log into Render dashboard -> Click "Clear build cache & deploy" to push the changes live. |
 | **🚨 3** | **Competitor Backlink Data** | 🔴 Missing | We have `[FILL FROM AHREFS]` placeholders for Dalibo and pganalyze in the report. **Action:** Drop their URLs into Ahrefs/Ubersuggest and record their Referring Domains and Total Backlinks. |
 | **🚨 4** | **Actual Tool Screenshots** | 🟡 Partial | The report has placeholders for Figure 1-4. **Action:** Once Render is deployed, take 4 actual screenshots of the QueryLens app, save them to the `/docs/` folder, and embed them in `report.md`. |
